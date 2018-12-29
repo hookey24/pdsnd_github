@@ -177,6 +177,7 @@ def user_stats(df, city):
         print('The number of genders are the following:\n' + str(df['Gender'].value_counts()))
     else:
         print('Gender is not recorded in ' + city.title())
+        print(df.groupby(['User Type'])['User Type'].count())
 
     # TO DO: Display earliest, most recent, and most common year of birth
     #df['Birth of Year'] = df.to_datetime(df['Birth of Year'])
