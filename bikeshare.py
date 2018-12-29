@@ -19,17 +19,17 @@ def get_filters():
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     print('Choose a city')
     city = input().lower()
-    
+
     while CITY_DATA.get(city) is None:
         print('Incorrect city name, try again')
         city = input().lower()
-    
+
 
     # TO DO: get user input for month (all, january, february, ... , june)
     Months = ['all', 'january', 'february', 'march', 'april', 'may', 'june']
     print('Choose a month, or type all')
     month = input()
-    
+
     while month not in Months:
         print('Incorrect month name, try again')
         month = input()
@@ -38,15 +38,15 @@ def get_filters():
     Dows = ['all', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     print('Choose a day, or type all')
     day = input()
-    
+
     while day not in Dows:
         print('Incorrect day name, try again')
-        day = input()    
-    
-    
+        day = input()
+
+
 
     print('-'*40)
-    
+
     return city, month, day
 
 
@@ -63,22 +63,22 @@ def load_data(city, month, day):
     """
     filename = CITY_DATA[city]
     df = pd.read_csv(filename)
-    
+
     df['Start Time'] = pd.to_datetime(df['Start Time'])
-    
+
     if month != 'all':
         df['Month'] = df['Start Time'].dt.month                             #Create Month column in dataframe
         Months = ['january', 'february', 'march', 'april', 'may', 'june']
         month = Months.index(month) + 1
         df = df[df['Month'] == month]
         #print('month success: ' + str(month))
-    
+
     if day != 'all':
         df['Day'] = df['Start Time'].dt.weekday_name
         df = df[df['Day'] == day.title()]
         #print('Day success: ' + day)
-    
-    
+
+
 
     return df
 
@@ -88,15 +88,15 @@ def time_stats(df, month, day):
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
-    
+
     Months = ['january', 'february', 'march', 'april', 'may', 'june']
     # TO DO: display the most common month
     if month == 'all':
-        
+
         df['Month'] = df['Start Time'].dt.month
         most_common_month = df['Month'].mode()[0]
         print('The most common month is: ' + Months[most_common_month - 1].title())
-        
+
     else:
         print('The current month is: ' + month.title())
 
@@ -111,7 +111,7 @@ def time_stats(df, month, day):
     # TO DO: display the most common start hour
     df['Hour'] = df['Start Time'].dt.hour
     print('The most common start hour is: ' + str(df['Hour'].mode()[0]))
-    
+
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -134,7 +134,7 @@ def station_stats(df):
     # TO DO: display most frequent combination of start station and end station trip
     df['Start-End Stations'] = df['Start Station'] + ' - ' + df['End Station']
     print('The most common frequent combonation of start and end stasions is: ' + str(df['Start-End Stations'].mode()[0]))
-    
+
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -152,7 +152,7 @@ def trip_duration_stats(df):
 
     # TO DO: display mean travel time
     print('The mean travel time is: ' + str(df['Trip Duration'].mean()))
-    
+
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -191,17 +191,33 @@ def user_stats(df, city):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def raw_data(df):
+    print('Would you like to see the raw data? Enter \'yes\' for 5 entries consecutively or \'no\' to exit.')
+    answ = input().lower()
+    row_count = 5
+    while answ != 'no':
+        while answ not in ['no', 'yes']:
+            print('Please choose from \'yes\' or \'no\'')
+            answ = input().lower()
+        print(df.iloc[row_count - 5:row_count,:])
+        row_count = row_count + 5
+        print('Would you like to see the raw data? Enter \'yes\' for 5 entries consecutively or \'no\' to exit.')
+        answ = input().lower()
+
+
 
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-        
+
 
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df, city)
+
+        raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
