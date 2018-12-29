@@ -2,7 +2,7 @@
 29th December 2018
 
 ### Project Title
-Bikeshare Stats Across the USA
+Bikeshare Stats in New York City, Washington and Chicago
 
 ### Description
 Bikeshare displays descriptive statistics on US bikeshare data in 3 major cities
