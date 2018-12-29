@@ -177,6 +177,7 @@ def user_stats(df, city):
         print('The number of genders are the following:\n' + str(df['Gender'].value_counts()))
     else:
         print('Gender is not recorded in ' + city.title())
+        print(df.groupby(['User Type'])['User Type'].count())
 
     # TO DO: Display earliest, most recent, and most common year of birth
     #df['Birth of Year'] = df.to_datetime(df['Birth of Year'])
@@ -191,6 +192,20 @@ def user_stats(df, city):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def raw_data(df):
+    print('Would you like to see the raw data? Enter \'yes\' for 5 entries consecutively or \'no\' to exit.')
+    answ = input().lower()
+    row_count = 5
+    while answ != 'no':
+        while answ not in ['no', 'yes']:
+            print('Please choose from \'yes\' or \'no\'')
+            answ = input().lower()
+        print(df.iloc[row_count - 5:row_count,:])
+        row_count = row_count + 5
+        print('Would you like to see the raw data? Enter \'yes\' for 5 entries consecutively or \'no\' to exit.')
+        answ = input().lower()
+
+
 
 def main():
     while True:
@@ -202,6 +217,8 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df, city)
+
+        raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
